@@ -1,4 +1,4 @@
-%% 1D Nonlinear FEM Code for Transient Heat Equation 
+%% 1D Nonlinear FEM Code for Transient Heat Equation
 % 
 % -div(k grad U) + rho \dot{U} = 0
 %

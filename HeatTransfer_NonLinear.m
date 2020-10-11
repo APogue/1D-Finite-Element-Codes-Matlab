@@ -1,4 +1,4 @@
-%% 1D Nonlinear FEM Code for Heat Equation 
+%% 1D Nonlinear FEM Code for Heat Equation
 %
 % -div(k grad U) = f
 %

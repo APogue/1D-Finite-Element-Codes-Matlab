@@ -90,7 +90,7 @@ end
 p = [1 tnn 1+tnn 2*tnn];               % Prescribed 
 f = setdiff(1:2*tnn,p);                % Free
 
-%% NEWMARK + MONOLITHIC
+%% GAMMA + MONOLITHIC
 
 % TIME DATA
 T    = 600;                 % Total Time

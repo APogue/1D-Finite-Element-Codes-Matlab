@@ -1,4 +1,4 @@
-%% 1D Nonlinear FEM Code for Transient Heat Equation 
+%% 1D Nonlinear FEM Code for Transient Heat Equation
 % 
 % -div(k0 grad U) = 0
 %
@@ -70,7 +70,7 @@ end
 % Assemble barK, barC and barF
 [ barK, barC, barF ] = Assembler( egnn, nne, tne, tnn, Ke, Ce, Fe, 'sparse' );
 
-%% Apply Drichlet Boundary Condition - Method 1
+%% Apply Drichlet Boundary Condition
 % FOR 1D STEADY STATE EXAMPLE
 
 tn = 1 : tnn;               % Node iterator
