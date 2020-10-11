@@ -112,6 +112,10 @@ U = [u;w];                  % Total Vector -- Displacement + Temperature
 % ASSEMBLY OF THE BIG SYSTEM
 A = [barM/(Beta*dt^2)+barE -barG;
              barG' dt*barK+barC];
+% When the system matrices does not change i.e. linear case
+% The system matrix can be assembled, combined and decomposed for faster simulations
+% This feature was first introduced in Matlab 2017b. If you have an older version of 
+% Matlab then remove the word "decomposition" from the following line.
 Aff = decomposition(A(f,f));
 
 % TIME STEPPING

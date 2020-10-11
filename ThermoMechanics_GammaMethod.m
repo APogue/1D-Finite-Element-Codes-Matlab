@@ -112,6 +112,11 @@ F = zeros(2*tnn,1);
 % ASSEMBLY OF THE BIG SYSTEM
 A = [1/dt*barM+Beta^2*dt*barE -Beta*barG;
         Beta*barG'       1/dt*barC+Beta*barK];
+
+% When the system matrices does not change i.e. linear case
+% The system matrix can be assembled, combined and decomposed for faster simulations
+% This feature was first introduced in Matlab 2017b. If you have an older version of 
+% Matlab then remove the word "decomposition" from the following line.
 Aff = decomposition(A(f,f));
 
 % TIME STEPPING

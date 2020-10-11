@@ -71,7 +71,12 @@ end
 [ barK, barC, barF ] = Assembler( egnn, nne, tne, tnn, Ke, Ce, Fe, 'sparse' );
 
 %% Transient Analysis.
-nu = 1;                 % Parameter in Crank-Nicolson time integration scheme
+
+nu = 1;                 % Parameter in generalized-theta time integration scheme
+						% For Euler-forward use: nu = 0;
+						% For Euler-backward use: nu = 1;
+						% For Crank-Nicolson use: nu = 0.5 or 0.51
+
 TotalTime = 1;          % Total simulation time
 tnts = 100;             % Total number of time steps
 dt = TotalTime/tnts;    % Time-step size
@@ -97,7 +102,10 @@ f = setdiff(tn, p);         % Free nodes
 Kpp = barK(p,p); Kpf = barK(p,f); Kfp = barK(f,p); Kff = barK(f,f);
 Cpp = barC(p,p); Cpf = barC(p,f); Cfp = barC(f,p); Cff = barC(f,f);
 
-% Decomposition the matrix for speed.
+% When the conductivity and the capacity matrices does not change i.e. linear case
+% The system matrix can be assembled, combined and decomposed for faster simulations
+% This feature was first introduced in Matlab 2017b. If you have an older version of 
+% Matlab then remove the word "decomposition" from the following line.
 dA = decomposition( Cff + dt*nu*Kff );
 
 % Initializing the reaction flux at the prescribed nodes.
