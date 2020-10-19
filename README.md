@@ -14,6 +14,7 @@ Students who have been through an introductory course on finite element method c
 - non-linear transient heat transfer - with Euler back time integration : `HeatTransfer_NonLinear_Transient.m`
 - thermo-mechanics -- with Gamma time integration : `ThermoMechanics_GammaMethod.m`
 - thermo-mechanics -- with Newmark time integration : `ThermoMechanics_NewMark.m` 
+- data-driven approach for transient mass diffusion : `DD_Transient_Diffusion.m`
 
 Any bugs, comments, suggestions, and discussion on the theoratical and implementation aspect are highly appreciated.
 

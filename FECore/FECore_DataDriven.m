@@ -19,11 +19,6 @@ for en = 1 : tne
 		
 		% Jacobian Matrix
 		Jcbn = B(gs,:)*x(egnn(en,:));
-		
-        barFg(gnn,1) = barFg(gnn,1) + B(gs,:)'/Jcbn * Dref * gradMu_str(en,gs) * glw(gs) * Jcbn;
-        barFm(gnn,1) = barFm(gnn,1) + N(gs,:)'    * 1/Lref *     Mu_str(en,gs) * glw(gs) * Jcbn;
-        barFj(gnn,1) = barFj(gnn,1) + B(gs,:)'/Jcbn        *   tenJ_str(en,gs) * glw(gs) * Jcbn;
-		barFc(gnn,1) = barFc(gnn,1) + N(gs,:)'    * (c_str(en,gs)-C(en,gs,1))  * glw(gs) * Jcbn;
         
 		% Element Stiffness Matrix
 		Ke(:,:,en) = Ke(:,:,en) + B(gs,:)'/Jcbn * Dref * B(gs,:)/Jcbn * glw(gs) * Jcbn;
