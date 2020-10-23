@@ -1,4 +1,4 @@
-%% 1-D COUPLED THERMO-MECHANICS FINITE ELEMENT CODE
+%% 1-D ELASTO-DYNAMICS CODE
 % 
 % Equations: \nabla\cdot\sigma + \rho a = 0
 % 	     \sigma: stess, rho: density, a: acceleration
