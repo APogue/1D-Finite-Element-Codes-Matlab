@@ -13,7 +13,7 @@ addpath FECore/
 %% 1D Meshing
 xstart = 0;             % Start point
 xend   = 1;             % End point
-tne    = 30;           % Total number of element in the domain.
+tne    = 100;           % Total number of element in the domain.
 
 % Element type:         Q1 --> LINEAR,  Q2 --> QUADRATIC
 elementtype = 'Q2';

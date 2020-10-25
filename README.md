@@ -2,7 +2,7 @@
 
 ## Context
 
-This repository consists of one-dimensional finite element codes. To learn the basics of a subject, during my Ph.D., I use to derive all the equations and write a simple finite element code to run some tests. The experience gained during that stage greatly helped me when I had to extend it towards more complicated theory, complex geometry and two-dimensional cases. I hope someone who has just started the graduate studies would greatly benifit from these simple implementations.
+This repository contains Matlab implementation of one-dimensional finite element codes. During my Ph.D. studies, to learn the basics of a subject, I use to derive all the equations and write a simple finite element code to run some tests. The experience gained during that stage greatly helped me when I had to extend it towards more complicated theory, complex geometry and two-dimensional cases. I hope someone who has just started the graduate studies would greatly benifit from these simple implementations.
 
 ## How to use the code?
 
@@ -18,9 +18,12 @@ Students who have been through an introductory course on finite element method c
 - data-driven approach for transient mass diffusion : 			`DD_Transient_Diffusion.m`
 
 Any bugs, comments, suggestions, and discussion on the theoratical and implementation aspect are highly appreciated.
+You can contact me at engineerabdullah@ymail.com .
 
-### To visualize Matlab code on GitHub
-Usual tab size on GitHub is 8 spaces. Matlab code does not look visually good on GitHub. To see the proper tab spacing in the codes append ?ts=4 at the end of the code URL e.g. https://github.com/AbdullahWaseem/1D-Finite-Element-Codes-Matlab/blob/main/HeatTransfer_NonLinear_Transient.m?ts=4
+## Cite this work
+Please cite this work as 
+
+Waseem, A. (2020) A simple Matlab implementation of 1D finite elements. Retrieved from https://github.com/AbdullahWaseem/1D-Finite-Element-Codes-Matlab
 
 ## Disclaimer
 This code is purely for educational purposes. All rights are preseved, however, author shall not be liable in any event caused by the use of the code. 
