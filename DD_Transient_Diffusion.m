@@ -40,6 +40,7 @@ run('GaussianLegendre.m');
 run('ShapeFunctions.m')     % Shape Functions
 
 %% DATA-GENERATION
+global Lref nnb Dref nna 
 
 % REFERENCE MATERIAL PROPERTIES
 Dref = 10;      % The reference diffusivity
@@ -50,7 +51,7 @@ C0 = 1;         % Reference concentration
 C1 = 3;         % Maximum concentration
 
 
-nDP  = 20;              % Number of data points
+nDP  = 200;              % Number of data points
 DBSize = (nDP)*(nDP);   % Data-base size
 mu1 = Lref*log(C1/C0);  % Maximum chemical potential value (it depends on what constitutive model you use)
 GradRange = mu1/L;      % The gradient of the chemical potential (the data has to be consistent with the boundary conditions)
@@ -93,6 +94,10 @@ tenJ_prm = -Dref*(c_prm).*gradMu_prm;
     relErr = 3.0e-2*C0*Dref(1,1)*GradRange;
     tenJ_prm = tenJ_prm + absErr*rand(1,DBSize) + relErr*rand(1,DBSize);
 
+% Data Set for the Distance Function
+DataSet = [Mu_prm' c_prm' gradMu_prm' tenJ_prm'];
+[MdL] = ExhaustiveSearcher(DataSet);
+    
 % VISUALIZING THE DATA-SET
 figure(1)
 subplot(1,2,1)
@@ -121,7 +126,7 @@ gradMu_str = max(gradMu_prm)    *zeros(tne,ngp);
 %% BOUNDARY CONDITION
 
 % On chemical potential
-pm = [1];                           % prescribed nodes
+pm = 1;                             % prescribed nodes
 fm = setdiff(1:tnn,pm); fm = fm';   % free nodes
 
 % On Lagrange multipliers
@@ -177,7 +182,7 @@ end
 maxIter = 100;          % Maximum Iteration.
 tol     = 1e-12;        % Tolerance and distance value. 
 prvDis  = 1;            % Initializing previous distance value
-
+tic
 for n = 2 : length(tItrt)   % Time stepping loop
     
     disp(['Time Step: ' num2str(n)])
@@ -212,18 +217,18 @@ for n = 2 : length(tItrt)   % Time stepping loop
             % Calculating local states at (k) 
                 % -------------------------------
                 gradMu =                                 B(gs,:)/Jcbn * Mu (gnn,n) ;
-                  tenJ = tenJ_str(en,gs) + dT*Dref*(B(gs,:)/Jcbn * Lam(gnn,n));
+                  tenJ = tenJ_str(en,gs)      + dT*Dref*(B(gs,:)/Jcbn * Lam(gnn,n));
                   gpMu =                                 N(gs,:)      * Mu (gnn,n) ;
             C(en,gs,n) =     c_str(en,gs)     - 1/Lref * N(gs,:)      * Lam(gnn,n) ;
             
-                %  DISTANCE
-                Pi = dot((gpMu-Mu_prm)*1/Lref/nnb,(gpMu-Mu_prm),1)' + ...
-                	 dot((C(en,gs,n)-c_prm)*Lref*nnb,(C(en,gs,n)-c_prm),1)' + ...
-                     dot((gradMu-gradMu_prm) * Dref*nna,(gradMu-gradMu_prm),1)' + ...
-                     dot((tenJ-tenJ_prm)*(1/Dref/nna),(tenJ-tenJ_prm),1)';
-
-                 % FINDING THE POINT IN THE DATA-SET WHICH MINIMIZES THIS DISTANCE FUNCTION
-                 [gpDis, indx] = min(Pi);
+                % FINDING THE POINT IN THE DATA-SET WHICH MINIMIZES THIS DISTANCE FUNCTION
+                 MaterialState = [gpMu C(en,gs,n) gradMu tenJ];
+                 [indx, gpDis] = knnsearch(MdL, MaterialState, 'Distance', @DisFunc);
+                 
+                 
+%                  [Pi] = DisFunc(MaterialState, DataSet);
+%                  [gpDis, indx] = min(Pi);
+                 
                  Dis = Dis + gpDis * glw(gs) * Jcbn;    % Integrating the distance globally
                  
                  % Assiging new internal-state 
@@ -281,4 +286,30 @@ for n = 2 : length(tItrt)   % Time stepping loop
     
     disp(' ');
     
+end
+toc
+
+% ===========================================================================================================================
+% SUPPORTING FUNCTIONS
+
+function [Pi] = DisFunc(MaterialState, DataSet)
+
+global Lref nnb Dref nna 
+
+gpMu   = MaterialState(1);
+C      = MaterialState(2);
+gradMu = MaterialState(3);
+tenJ   = MaterialState(4);
+
+Mu_prm     = DataSet(:,1);
+c_prm      = DataSet(:,2);
+gradMu_prm = DataSet(:,3);
+tenJ_prm   = DataSet(:,4);
+
+% Distance Function
+Pi = dot((gpMu-Mu_prm')*1/Lref/nnb,(gpMu-Mu_prm'),1)' + ...
+     dot((C-c_prm')*Lref*nnb,(C-c_prm'),1)' + ...
+     dot((gradMu-gradMu_prm') * Dref*nna,(gradMu-gradMu_prm'),1)' + ...
+     dot((tenJ-tenJ_prm')*(1/Dref/nna),(tenJ-tenJ_prm'),1)';
+ 
 end
