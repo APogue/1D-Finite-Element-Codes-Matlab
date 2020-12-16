@@ -6,13 +6,13 @@
 % Created: 27-August-2017
 % Contact: engineerabdullah@ymail.com
 
-clear; clc; clf; path(pathdef);
+clear; clc; path(pathdef);
 addpath FECore/
 
 %% 1D Meshing
 xstart = 0;             % Start point
 xend   = 1;             % End point
-tne = 10;              % Total number of element in the domain.
+tne = 100;              % Total number of element in the domain.
 
 % Element type:         Q1 --> LINEAR,  Q2 --> QUADRATIC
 elementtype = 'Q1';
@@ -20,9 +20,11 @@ elementtype = 'Q1';
 [ L, lnn, nne, el, egnn, tnn, x ] = CreateMesh( elementtype, tne, xstart, xend  );
         
 %% Material Properties (Constant with in elements -- Q0)
-k0 = 100 * ones(tne,1);     % Conductivity
+k0 = 100;% * ones(tne,1);     % Conductivity
 rho    = 1 * ones(tne,1);       % Density
 c      = 1 * ones(tne,1);       % Heat capacity
+
+kx = k0 * (1 + x/L);
 
 % % Volume fraction of inclusion
 % vf = 0.4;
@@ -53,18 +55,20 @@ for en = 1 : tne
 		
 		% Iso-parameteric map
 		x_z  = N(gs,:) * x(egnn(en,:));
-		
+        
+        kx_z = N(gs,:)*kx(egnn(en,:));
+		kx_a = k0*(exp(x_z));
 		%Source at that gauss point
-		source = x_z*sin(2*pi*x_z);  % This is an example
+% 		source = x_z*sin(2*pi*x_z);  % This is an example
 		
 		% Element Conductivity Matrix
-		Ke(:,:,en) = Ke(:,:,en) + B(gs,:)'/Jcbn * k0(en) * B(gs,:)/Jcbn * glw(gs) * Jcbn;
+		Ke(:,:,en) = Ke(:,:,en) + B(gs,:)'/Jcbn * kx_z * B(gs,:)/Jcbn * glw(gs) * Jcbn;
 		
 		% Element Heat Capacity Matrix
 		Ce(:,:,en) = Ce(:,:,en) + N(gs,:)' * rho(en)*c(en) * N(gs,:) * glw(gs) * Jcbn;
 		
 		% Element Source Vector
-		Fe(:,1,en) = Fe(:,1,en) + N(gs,:)' * source * glw(gs) * Jcbn;
+		Fe(:,1,en) = Fe(:,1,en) + N(gs,:)' * 0 * glw(gs) * Jcbn;
 	end
 end
 % Assemble barK, barC and barF
@@ -83,7 +87,7 @@ u = u0*ones(tnn,1);
 
 % Prescribed value of solution
 u(1) = u0 + 0;
-u(end) = u0 + 0;
+u(end) = u0 + 10;
 
 % Solution.
 u(f) = barK(f,f) \ ( - barK(f,p) * u(p) + barF(f,1) );
@@ -92,8 +96,12 @@ u(f) = barK(f,f) \ ( - barK(f,p) * u(p) + barF(f,1) );
 Fext = barK(p,p)*u(p) + barK(p,f)*u(f);
 
 %% Plotting the results.
-plot(x, u, 'Color', 'k', 'LineWidth', 1.2);
-
-
-
+% plot(x, u, 'Color', 'k', 'LineWidth', 1.2);
+condest(barK(f,f))
+rank(full(barK(f,f)))
+length(f)
+[U,S,V] = svd(full(barK(f,f)),'econ');
+semilogy(1000/tne:1000/tne:(1000-1000/tne), diag(S)./max(diag(S)),'-')
+xlim([0 1000])
+hold on
 
